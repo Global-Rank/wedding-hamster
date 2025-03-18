@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Свадебный Хомяк</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f8f0e6;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+            text-align: center;
+        }
+
+        #counter {
+            font-size: 24px;
+            color: #6b4f4f;
+            margin-bottom: 20px;
+        }
+
+        .hamster {
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .hamster:active {
+            transform: scale(0.95);
+        }
+
+        #invitation {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            max-width: 300px;
+        }
+
+        .heart {
+            color: #ff4d4d;
+            font-size: 24px;
+        }
+
+        button {
+            background: #6b4f4f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="counter">Собранные сердечки: ❤️ 0</div>
+    <img src="https://cdn-icons-png.flaticon.com/512/3202/3202926.png" 
+         class="hamster" 
+         id="hamster"
+         alt="Хомяк">
+    
+    <div id="invitation">
+        <h2>❤️ Приглашение на свадьбу ❤️</h2>
+        <p>Никита и Юля</p>
+        <p>29 мая 2025 года</p>
+        <p>Начало в 17:30</p>
+        <p>Анти-кафе "Циферблат"</p>
+        <button onclick="Telegram.WebApp.close()">Закрыть</button>
+    </div>
+
+    <script>
+        let score = 0;
+        const hamster = document.getElementById('hamster');
+        const counter = document.getElementById('counter');
+        const invitation = document.getElementById('invitation');
+
+        // Инициализация Telegram WebApp
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        hamster.addEventListener('click', () => {
+            score++;
+            counter.innerHTML = `Собранные сердечки: ❤️ ${score}`;
+            
+            // Анимация прыжка
+            hamster.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                hamster.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Проверка победы
+            if(score >= 20) {
+                hamster.style.display = 'none';
+                invitation.style.display = 'block';
+                Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+            }
+        });
+
+        // Случайное перемещение хомяка каждые 2 секунды
+        setInterval(() => {
+            if(score < 20) {
+                const x = Math.random() * (window.innerWidth - 200);
+                const y = Math.random() * (window.innerHeight - 200);
+                hamster.style.position = 'absolute';
+                hamster.style.left = x + 'px';
+                hamster.style.top = y + 'px';
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
